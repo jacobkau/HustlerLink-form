@@ -1,38 +1,42 @@
 <?php
-// Database configuration
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "hustlerlink_db";
+$csvFile = "submissions.csv";
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+// Get form data safely
+$fullName = $_POST['fullName'] ?? '';
+$email = $_POST['email'] ?? '';
+$phone = $_POST['phone'] ?? '';
+$userType = $_POST['userType'] ?? '';
+$skills = $_POST['skills'] ?? '';
+$location = $_POST['location'] ?? '';
+$timestamp = date("Y-m-d H:i:s");
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+// Check if file exists
+$fileExists = file_exists($csvFile);
 
-// Prepare and bind
-$stmt = $conn->prepare("INSERT INTO users (full_name, email, phone, user_type, skills, location, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())");
-$stmt->bind_param("ssssss", $fullName, $email, $phone, $userType, $skills, $location);
+// Open file for appending
+$file = fopen($csvFile, "a");
 
-// Set parameters and execute
-$fullName = $_POST['fullName'];
-$email = $_POST['email'];
-$phone = $_POST['phone'];
-$userType = $_POST['userType'];
-$skills = $_POST['skills'];
-$location = $_POST['location'];
+if ($file) {
+    // If new file, write headers
+    if (!$fileExists) {
+        fputcsv($file, ["#", "Full Name", "Email", "Phone", "User Type", "Skills", "Location", "Submitted At"]);
+    }
 
-if ($stmt->execute()) {
-    // Success - redirect to thank you page
+    // Count lines to assign number (skip header)
+    $lineNumber = 1;
+    if ($fileExists) {
+        $lines = file($csvFile, FILE_IGNORE_NEW_LINES);
+        $lineNumber = count($lines); // includes header
+    }
+
+    // Write new row
+    fputcsv($file, [$lineNumber, $fullName, $email, $phone, $userType, $skills, $location, $timestamp]);
+    fclose($file);
+
+    // Redirect on success
     header("Location: success.php");
     exit();
 } else {
-    echo "Error: " . $stmt->error;
+    echo "Error: Could not write to file.";
 }
-
-$stmt->close();
-$conn->close();
 ?>
