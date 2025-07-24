@@ -1,7 +1,18 @@
 <?php
-// Path to CSV in same directory
-$csvFile = __DIR__ . "/submissions.csv";
+// Enable error reporting
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
+// Use a writable directory
+$storageDir = __DIR__ . '/storage';
+$csvFile = $storageDir . '/submissions.csv';
+
+// Create storage directory if it doesn't exist
+if (!file_exists($storageDir)) {
+    if (!mkdir($storageDir, 0755, true)) {
+        die("Failed to create storage directory");
+    }
+}
 // Get form data safely
 $fullName  = $_POST['fullName'] ?? '';
 $email     = $_POST['email'] ?? '';
