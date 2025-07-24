@@ -1,42 +1,45 @@
 <?php
-$csvFile = "submissions.csv";
+// Path to CSV in same directory
+$csvFile = __DIR__ . "/submissions.csv";
 
 // Get form data safely
-$fullName = $_POST['fullName'] ?? '';
-$email = $_POST['email'] ?? '';
-$phone = $_POST['phone'] ?? '';
-$userType = $_POST['userType'] ?? '';
-$skills = $_POST['skills'] ?? '';
-$location = $_POST['location'] ?? '';
+$fullName  = $_POST['fullName'] ?? '';
+$email     = $_POST['email'] ?? '';
+$phone     = $_POST['phone'] ?? '';
+$userType  = $_POST['userType'] ?? '';
+$skills    = $_POST['skills'] ?? '';
+$location  = $_POST['location'] ?? '';
 $timestamp = date("Y-m-d H:i:s");
 
-// Check if file exists
+// Validate (optional)
+if (empty($fullName) || empty($email)) {
+    echo "Name and Email are required.";
+    exit();
+}
+
+// Check if CSV file exists
 $fileExists = file_exists($csvFile);
 
-// Open file for appending
+// Open the file for appending
 $file = fopen($csvFile, "a");
-
 if ($file) {
-    // If new file, write headers
+    // If new file, add headers
     if (!$fileExists) {
         fputcsv($file, ["#", "Full Name", "Email", "Phone", "User Type", "Skills", "Location", "Submitted At"]);
     }
 
-    // Count lines to assign number (skip header)
-    $lineNumber = 1;
-    if ($fileExists) {
-        $lines = file($csvFile, FILE_IGNORE_NEW_LINES);
-        $lineNumber = count($lines); // includes header
-    }
+    // Count lines to get row number (skip header)
+    $lines = file($csvFile, FILE_IGNORE_NEW_LINES);
+    $rowNumber = count($lines);
 
-    // Write new row
-    fputcsv($file, [$lineNumber, $fullName, $email, $phone, $userType, $skills, $location, $timestamp]);
+    // Write the new data
+    fputcsv($file, [$rowNumber, $fullName, $email, $phone, $userType, $skills, $location, $timestamp]);
     fclose($file);
 
-    // Redirect on success
+    // Redirect to thank-you page
     header("Location: success.php");
     exit();
 } else {
-    echo "Error: Could not write to file.";
+    echo "❌ Unable to open or write to submissions.csv";
 }
 ?>
