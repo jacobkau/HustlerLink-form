@@ -9,10 +9,10 @@ function getDBConnection() {
 
     $dbOpts = parse_url($dbUrl);
     
-    $dbHost = $dbOpts['dpg-d21428ffte5s73f229fg-a'];
-    $dbPort = $dbOpts['5432'];
-    $dbUser = $dbOpts['hustlerlink_db_user'];
-    $dbPass = $dbOpts['muB9O5EqQ3AmZwJRZn5GzulmBMTwLM49'];
+     $dbHost = $dbOpts['host'];
+    $dbPort = $dbOpts['port'];
+    $dbUser = $dbOpts['user'];
+    $dbPass = $dbOpts['pass'];
     $dbName = ltrim($dbOpts['path'], '/');
 
     try {
