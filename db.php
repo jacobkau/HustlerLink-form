@@ -4,15 +4,15 @@ function getDBConnection() {
     
     if (empty($dbUrl)) {
         // Local development fallback
-        $dbUrl = "postgresql://postgres:password@localhost:5432/hustlerlink";
+        $dbUrl = "postgresql://hustlerlink_db_user:muB9O5EqQ3AmZwJRZn5GzulmBMTwLM49@dpg-d21428ffte5s73f229fg-a/hustlerlink_db";
     }
 
     $dbOpts = parse_url($dbUrl);
     
-    $dbHost = $dbOpts['host'];
-    $dbPort = $dbOpts['port'];
-    $dbUser = $dbOpts['user'];
-    $dbPass = $dbOpts['pass'];
+    $dbHost = $dbOpts['dpg-d21428ffte5s73f229fg-a'];
+    $dbPort = $dbOpts['5432'];
+    $dbUser = $dbOpts['hustlerlink_db_user'];
+    $dbPass = $dbOpts['muB9O5EqQ3AmZwJRZn5GzulmBMTwLM49'];
     $dbName = ltrim($dbOpts['path'], '/');
 
     try {
