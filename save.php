@@ -3,6 +3,9 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+// Start output buffering to prevent header errors
+ob_start();
+
 // Define paths
 $storageDir = __DIR__ . '/storage';
 $csvFile = $storageDir . '/submissions.csv';
@@ -19,13 +22,13 @@ error_log("CSV File Path: " . $csvFile);
 error_log("Directory exists: " . (file_exists($storageDir) ? 'Yes' : 'No'));
 error_log("Directory writable: " . (is_writable($storageDir) ? 'Yes' : 'No'));
 
-// Get form data with sanitization
-$fullName = filter_input(INPUT_POST, 'fullName', FILTER_SANITIZE_STRING) ?? '';
+// Get form data with proper sanitization
+$fullName = isset($_POST['fullName']) ? htmlspecialchars($_POST['fullName'], ENT_QUOTES, 'UTF-8') : '';
 $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL) ?? '';
-$phone = filter_input(INPUT_POST, 'phone', FILTER_SANITIZE_STRING) ?? '';
-$userType = filter_input(INPUT_POST, 'userType', FILTER_SANITIZE_STRING) ?? '';
-$skills = filter_input(INPUT_POST, 'skills', FILTER_SANITIZE_STRING) ?? '';
-$location = filter_input(INPUT_POST, 'location', FILTER_SANITIZE_STRING) ?? '';
+$phone = isset($_POST['phone']) ? htmlspecialchars($_POST['phone'], ENT_QUOTES, 'UTF-8') : '';
+$userType = isset($_POST['userType']) ? htmlspecialchars($_POST['userType'], ENT_QUOTES, 'UTF-8') : '';
+$skills = isset($_POST['skills']) ? htmlspecialchars($_POST['skills'], ENT_QUOTES, 'UTF-8') : '';
+$location = isset($_POST['location']) ? htmlspecialchars($_POST['location'], ENT_QUOTES, 'UTF-8') : '';
 $timestamp = date("Y-m-d H:i:s");
 
 // Validate required fields
@@ -87,7 +90,8 @@ try {
     // Log success
     error_log("Successfully wrote to CSV file");
     
-    // Redirect to success page
+    // Clear output buffer and redirect
+    ob_end_clean();
     header("Location: success.php");
     exit();
 
@@ -96,5 +100,6 @@ try {
     error_log("Error in save.php: " . $e->getMessage());
     
     // Show user-friendly error message
-    die("An error occurred while saving your submission. Please try again later. Error: " . $e->getMessage());
+    ob_end_clean();
+    die("An error occurred while saving your submission. Please try again later. Error: " . htmlspecialchars($e->getMessage()));
 }
