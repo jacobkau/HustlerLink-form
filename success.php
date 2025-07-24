@@ -26,7 +26,7 @@
                             <i class="fas fa-check-circle fa-5x text-success mb-4"></i>
                             <h3 class="mb-3">Your Profile Has Been Submitted</h3>
                             <p>We've received your information and will be in touch soon to help you get started with HustlerLink.</p>
-                            <a href="index.php" class="btn btn-primary mt-3">Return to Home</a>
+                            <a href="https://hustlerlink.com/" class="btn btn-primary mt-3">Return to Home</a>
                         </div>
                     </div>
                 </div>
