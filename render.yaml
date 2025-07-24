@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: hustler-php-app
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    buildCommand: ""
+    startCommand: "php -S 0.0.0.0:80 -t ."
